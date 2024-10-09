@@ -30,19 +30,25 @@ def bfs(grafo, nodo_raiz):
                 ##Este nodo vecino es agregado a la lista de previos
                 ##previos = previos + [vecino]
                 previos = push(vecino, previos)
-                print("Salio del push")
-    i = i + 1;
+                ##print("Salio del push")
+                
+
+        i = i + 1;
 
 def push(vecino, previos):
-    ##listaNueva = [False]*(len(previos) + 2)
-    for i in (0, len(previos) + 1):
-        if i < len(previos):
-            listaNueva[i] = previos[i]
-        listaNueva[i] = vecino
+    listaNueva = [False]*(len(previos) + 1)
+    lenPrevios = len(previos)
+    lenListaNueva = len(listaNueva)
+    print("lenPrevios = ", lenPrevios)
+    print("lenListaNueva = ", lenListaNueva)
+    for j in (0, (lenListaNueva-1)):
+        if j < lenPrevios:
+            listaNueva[j] = previos[j]
+        listaNueva[j] = vecino
     return listaNueva
 
 grafo = {
-    1:[3, 2],
+    1:[2, 3],
     2:[1],
     3:[1]
 }
