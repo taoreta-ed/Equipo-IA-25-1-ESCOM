@@ -1,7 +1,7 @@
 import time
 import tracemalloc
 
-def dfs(grafo, nodo_raiz):
+def dfs(grafo, nodo_raiz, nodo_objetivo):
     # Inicio de medición de memoria y tiempo
     tracemalloc.start()
     start_time = time.time()
@@ -12,6 +12,9 @@ def dfs(grafo, nodo_raiz):
     # Lista para marcar los nodos visitados
     visitados = [False] * (len(grafo) + 1)
 
+    # Definimos una bandera para saber si el nodo fue encontrado
+    bandera = False
+
     while pila:
         # Sacamos el último nodo usando nuestra función `pop`
         nodo_actual, pila = pop(pila)
@@ -21,10 +24,18 @@ def dfs(grafo, nodo_raiz):
             print(nodo_actual)
             visitados[nodo_actual] = True
 
+            # Verificar si encontramos el nodo objetivo
+            if nodo_actual == nodo_objetivo:
+                bandera = True
+                print("Nodo encontrado: ", nodo_actual)
+                break  # Detener la búsqueda
+
             # Agregamos los vecinos no visitados a la pila
             for vecino in grafo[nodo_actual]:
                 if not visitados[vecino]:
                     pila = push(vecino, pila)
+    if not bandera:
+        print("El nodo objetivo no fue encontrado")
 
     # Finaliza medición de memoria y tiempo
     memoria_consumida = tracemalloc.get_traced_memory()
@@ -57,7 +68,7 @@ def pop(pila):
     # Devolvemos el elemento eliminado y la lista modificada
     return elemento, nueva_pila
 
-# Grafo de ejemplo representado como lista de adyacencia
+# Definicion del grafo 
 grafoBase = {
     1: [2, 3],
     2: [1],
@@ -75,5 +86,5 @@ grafo = {
 8: [7],
 }
 
-# Llamamos a la función DFS con el nodo raíz 1
-dfs(grafo, 1)
+# Llamamos a la función DFS buscando el nodo objetivo 7
+dfs(grafo, 1, 55)
