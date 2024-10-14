@@ -34,6 +34,12 @@ def bfs(grafo, nodo_raiz):
                 
 
         i = i + 1;
+    
+    # Finaliza medición de memoria y tiempo
+    memoria_consumida = tracemalloc.get_traced_memory()
+    tracemalloc.stop()
+    print(f"Tiempo de ejecución: {time.time() - start_time:.6f} segundos")
+    print(f"Memoria usada: {memoria_consumida[1] / 1024:.2f} KB")
 
 def push(vecino, previos):
     # Crear una nueva lista con tamaño incrementado en 1
