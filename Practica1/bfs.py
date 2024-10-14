@@ -36,16 +36,18 @@ def bfs(grafo, nodo_raiz):
         i = i + 1;
 
 def push(vecino, previos):
-    listaNueva = [False]*(len(previos) + 1)
-    lenPrevios = len(previos)
-    lenListaNueva = len(listaNueva)
-    print("lenPrevios = ", lenPrevios)
-    print("lenListaNueva = ", lenListaNueva)
-    for j in (0, (lenListaNueva-1)):
-        if j < lenPrevios:
-            listaNueva[j] = previos[j]
-        listaNueva[j] = vecino
+    # Crear una nueva lista con tamaño incrementado en 1
+    listaNueva = [0] * (len(previos) + 1)
+    
+    # Copiar los elementos de 'previos' a 'listaNueva'
+    for j in range(len(previos)):
+        listaNueva[j] = previos[j]
+    
+    # Agregar el nuevo vecino al final de la lista
+    listaNueva[len(previos)] = vecino
+
     return listaNueva
+
 
 grafo = {
     1:[2, 3],
