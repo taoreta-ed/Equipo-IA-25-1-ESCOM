@@ -75,5 +75,8 @@ grafo = {
 8: [7],
 }
 
+
+
+
 # Llamada a la función con nodo objetivo 7
-bfs(grafo, 1,55)
+bfs(grafo_100, 1,55)

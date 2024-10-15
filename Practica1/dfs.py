@@ -86,5 +86,7 @@ grafo = {
 8: [7],
 }
 
+
+
 # Llamamos a la función DFS buscando el nodo objetivo 7
-dfs(grafo, 1, 55)
+dfs(grafo_100, 1, 55)
