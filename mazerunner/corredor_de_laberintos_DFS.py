@@ -21,7 +21,7 @@ def dfs(laberinto, punto_inicial, meta):
 
     while len(pila) > 0:
         nodo_actual, camino = pila[-1]
-        pila = pila[:1]
+        pila = pila[:-1]
 
         #Guardar los nodos que se han ido visitando
         considerados += [considerados]
@@ -37,3 +37,4 @@ def dfs(laberinto, punto_inicial, meta):
                 ## Ver si el nodo a evaluar (nueva_posicion)  es un camino accesible y ademas si ese nodo no lo he visitado
                 if (maze[nueva_posicion[0], nueva_posicion[1]]) == 0 and (visitados[nueva_posicion[0], nueva_posicion[1]]==0):
                     pila += [(nueva_posicion + [nodo_actual])]
+    return None, considerados
