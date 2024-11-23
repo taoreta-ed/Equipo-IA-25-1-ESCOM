@@ -34,7 +34,7 @@ punto_inicial = (1,1)
 meta = (13,15)
 
 #Tipos de movimiento
-movimientos = [(-1,0),(0,1),(1,0),(0,-1)]
+movimientos = [(-1,-1),(-1,0),(-1,1),(0,1),(1,1),(1,0),(1.-1),(0,-1  )]
 
 def dfs(laberinto,punto_inicial,meta):
     #Lista para manejar los nodos por explorar (pila)
