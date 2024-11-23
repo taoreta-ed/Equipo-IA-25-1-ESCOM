@@ -35,8 +35,12 @@ meta = (1,8)
 #Tipos de movimiento
 movimientos = [(-1,-1),(-1,0),(0,1),(1,1),(1,0),(1,-1),(0,-1)]
 
-def heuristica(nodo_actual,objetivo):
-    return (abs(objetivo[0] - nodo_actual[0]) + abs(objetivo[1] - nodo_actual[1]))
+# def heuristica(nodo_actual,objetivo):
+#     return (abs(objetivo[0] - nodo_actual[0]) + abs(objetivo[1] - nodo_actual[1]))
+
+def distancia_euclidiana(nodo_actual, objetivo):
+  return np.sqrt((objetivo[0] - nodo_actual[0])**2 + (objetivo[1] - nodo_actual[1])**2)
+
 
 def desplegar_laberinto(maze,camino = None,considerados = None):
     plt.imshow(maze,cmap = 'binary')
@@ -48,18 +52,26 @@ def desplegar_laberinto(maze,camino = None,considerados = None):
             plt.plot(j[1],j[0],'o',color = 'red')
     plt.show()
 
+
+    # Contadores
+    print(f"Total de bolitas azules (nodos explorados): {len(considerados)}")
+    print(f"Total de bolitas rojas (camino final): {len(camino)}")
+
 def A_estrella(maze,punto_inicial,meta):
   #Lista para manejar los nodos por explorar (pila)
-  lista_abierta = [(punto_inicial,0,heuristica(punto_inicial,meta),[])]
-  #lista_abierta = nodo(g,h,camino)
+
+  #lista_abierta = [(punto_inicial,0,heuristica(punto_inicial,meta),[])]
+  lista_abierta = [(punto_inicial, 0, distancia_euclidiana(punto_inicial, meta), [])]
+  
   #lista_abierta = (nodo,g,f,camino)
   considerados = []
+
   #Matriz de visitados
   filas = np.shape(maze)[0]
   columnas = np.shape(maze)[1]
   lista_cerrada = np.zeros((filas,columnas))
 
-  #lista_cerrada = np.zeros_like(laberinto)
+
   while len(lista_abierta) > 0:
       menor_f = lista_abierta[0][2]
       nodo_actual,g_actual,f_actual,camino_actual = lista_abierta[0]
@@ -71,13 +83,17 @@ def A_estrella(maze,punto_inicial,meta):
               menor_f = lista_abierta[i][2]
               nodo_actual,g_actual,f_actual,camino_actual = lista_abierta[i]
               indice_menor_f = i
+
       #Eliminarlo de la lista abierta
       lista_abierta = lista_abierta[:indice_menor_f] + lista_abierta[indice_menor_f + 1:]
+
       #Guarda todos los nodos que han sido evaluados aunque no formen parte del camino final
       considerados += [nodo_actual]
+
       #Evaluamos si el nodo actual es o no el nodo meta
       if nodo_actual == meta:
           return camino_actual + [nodo_actual],considerados
+      
       #Agregar a la lista cerrada
       lista_cerrada[nodo_actual[0],nodo_actual[1]] = 1
 
@@ -93,7 +109,8 @@ def A_estrella(maze,punto_inicial,meta):
             else:
               g_nuevo = g_actual + 10
 
-            f_nuevo = g_nuevo + heuristica(nueva_posicion,meta)
+            # f_nuevo = g_nuevo + heuristica(nueva_posicion,meta)
+            f_nuevo = g_nuevo + distancia_euclidiana(nueva_posicion,meta)
             bandera_lista = False
 
             for nodo,g,f,camino in lista_abierta:
