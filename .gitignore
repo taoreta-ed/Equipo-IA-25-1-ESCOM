@@ -160,3 +160,7 @@ cython_debug/
 #  and can be added to the global gitignore or merged into this file.  For a more nuclear
 #  option (not recommended) you can uncomment the following to ignore the entire idea folder.
 #.idea/
+
+# Ignoramos las credenciales para el dilema del prisonero
+dilema-del-prisionero/dilema-del-prisionero-442816-78d33b6bfc70.json
+dilema-del-prisionero/dilema-del-prisionero-442816-78d33b6bfc70.json:Zone.Identifier
