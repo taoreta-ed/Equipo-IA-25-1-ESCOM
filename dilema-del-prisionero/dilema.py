@@ -27,7 +27,7 @@ def enviar_eleccion():
         return enviar_eleccion()  # Vuelve a pedir la opción si no es válida
 
     # Envía la elección a una celda de la hoja
-    worksheet.update("B2", [[eleccion]])  # Asegúrate de pasar el valor como una lista de listas
+    worksheet.update("B2", [[eleccion]])  # pasar el valor como una lista de listas
 
     print(f"Se ha registrado '{eleccion}' en la hoja de cálculo.")
 
@@ -41,13 +41,16 @@ amigo = input("Selecciona una opción: ")
 if amigo == "1":
     print("\n\n\n - - - - - - - - - - - - - - - - - - - - - - - -")
     print("Recuerda que es amigo, no te va a traicionar")
+    relacion = "Amigo"
 elif amigo == "2":
     print("\n\n\n - - - - - - - - - - - - - - - - - - - - - - - -")
     print("Traiciona, recuerda que te robó tu gansito")
+    relacion = "Enemigo"
 else:
     print("\n\n\n - - - - - - - - - - - - - - - - - - - - - - - -")
     print("Es posible que te traicione, elige sabiamente")
-
+    relacion = "X"
+worksheet.update("A4", [[relacion]])
 
 # Ejecuta el programa
 enviar_eleccion()
