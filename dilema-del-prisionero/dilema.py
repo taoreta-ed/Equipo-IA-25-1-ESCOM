@@ -27,9 +27,27 @@ def enviar_eleccion():
         return enviar_eleccion()  # Vuelve a pedir la opción si no es válida
 
     # Envía la elección a una celda de la hoja
-    worksheet.update("A1", [[eleccion]])  # Asegúrate de pasar el valor como una lista de listas
+    worksheet.update("B2", [[eleccion]])  # Asegúrate de pasar el valor como una lista de listas
 
     print(f"Se ha registrado '{eleccion}' en la hoja de cálculo.")
+
+
+#Preguntar como considera al otro prisionero
+print("¿Cómo consideras al otro prisionero?")
+print("1. Amigo")
+print("2. Cae mal")
+print("3. X")
+amigo = input("Selecciona una opción: ")
+if amigo == "1":
+    print("\n\n\n - - - - - - - - - - - - - - - - - - - - - - - -")
+    print("Recuerda que es amigo, no te va a traicionar")
+elif amigo == "2":
+    print("\n\n\n - - - - - - - - - - - - - - - - - - - - - - - -")
+    print("Traiciona, recuerda que te robó tu gansito")
+else:
+    print("\n\n\n - - - - - - - - - - - - - - - - - - - - - - - -")
+    print("Es posible que te traicione, elige sabiamente")
+
 
 # Ejecuta el programa
 enviar_eleccion()
