@@ -38,8 +38,8 @@ for i in range (len(pacientes)):
 
         #diagnosticos = diagnosticos + [[nombre_paciente, enfermedad_diagnosticada]]
 
-    for m in range(len(diagnosticos)):
-        print(f"{diagnosticos[m][0]}:")
+   # for m in range(len(diagnosticos)):
+       # print(f"{diagnosticos[m][0]}:")
 
 
 
