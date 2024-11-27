@@ -42,7 +42,8 @@ def bfs(laberinto, punto_inicial, meta):
         cola = cola[1:]
 
         # Guardar los nodos que se han ido visitando
-        considerados.append(nodo_actual)
+        #considerados.append(nodo_actual)
+        mi_append(considerados, nodo_actual)
 
         if nodo_actual == meta:
             return camino + [nodo_actual], considerados
@@ -53,8 +54,14 @@ def bfs(laberinto, punto_inicial, meta):
             # Verificar que el vecino esté dentro del laberinto y no haya sido visitado
             if (0 <= nueva_posicion[0] < filas) and (0 <= nueva_posicion[1] < columnas):
                 if (maze[nueva_posicion[0], nueva_posicion[1]] == 0 and visitados[nueva_posicion[0], nueva_posicion[1]] == 0):
-                    cola.append((nueva_posicion, camino + [nodo_actual]))
+                    #cola.append((nueva_posicion, camino + [nodo_actual]))
+                    mi_append(cola, (nueva_posicion, camino + [nodo_actual]))
     return None, considerados
+
+#Funcion que reemplaza append
+def mi_append(lista, elemento):
+    """Agrega un elemento al final de la lista."""
+    lista += [elemento]  # Usamos la concatenación para evitar append.
 
 def desplegar_laberinto(maze, camino=None, considerados=None):
     plt.imshow(maze, cmap='binary')

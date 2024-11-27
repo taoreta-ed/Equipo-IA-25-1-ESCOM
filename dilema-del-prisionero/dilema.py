@@ -27,7 +27,7 @@ def enviar_eleccion():
         return enviar_eleccion()  # Vuelve a pedir la opción si no es válida
 
     # Envía la elección a una celda de la hoja
-    worksheet.update("B2", [[eleccion]])  # pasar el valor como una lista de listas
+    worksheet.update("A2", [[eleccion]])  # pasar el valor como una lista de listas
 
     print(f"Se ha registrado '{eleccion}' en la hoja de cálculo.")
 
