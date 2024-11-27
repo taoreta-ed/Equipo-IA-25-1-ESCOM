@@ -46,16 +46,16 @@ def desplegar_laberinto(maze,camino = None,considerados = None):
     plt.imshow(maze,cmap = 'binary')
     if considerados:
         for i in considerados:
-            plt.plot(i[1],i[0],'o',color = 'blue')
+            plt.plot(i[1],i[0],'o',color = 'pink')
     if camino:
         for j in camino:
-            plt.plot(j[1],j[0],'o',color = 'red')
+            plt.plot(j[1],j[0],'o',color = 'purple')
     plt.show()
 
 
     # Contadores
-    print(f"Total de bolitas azules (nodos explorados): {len(considerados)}")
-    print(f"Total de bolitas rojas (camino final): {len(camino)}")
+    print(f"Total de bolitas rosas (nodos explorados): {len(considerados)}")
+    print(f"Total de bolitas moradas (camino final): {len(camino)}")
 
 def A_estrella(maze,punto_inicial,meta):
   #Lista para manejar los nodos por explorar (pila)
