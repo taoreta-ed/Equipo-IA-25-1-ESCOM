@@ -31,14 +31,14 @@ maze = np.array([
 
 #Inicializar punto inicial y punto final
 punto_inicial = (1,1)
-meta = (1,8)
+meta = (13,12)
 #Tipos de movimiento
 movimientos = [(-1,-1),(-1,0),(0,1),(1,1),(1,0),(1,-1),(0,-1)]
 
 # def heuristica(nodo_actual,objetivo):
 #     return (abs(objetivo[0] - nodo_actual[0]) + abs(objetivo[1] - nodo_actual[1]))
 
-def distancia_euclidiana(nodo_actual, objetivo):
+def distancia_heuristica(nodo_actual, objetivo):
   return np.sqrt((objetivo[0] - nodo_actual[0])**2 + (objetivo[1] - nodo_actual[1])**2)
 
 
@@ -60,8 +60,9 @@ def desplegar_laberinto(maze,camino = None,considerados = None):
 def A_estrella(maze,punto_inicial,meta):
   #Lista para manejar los nodos por explorar (pila)
 
+  #Punto inicial | Distancia Manhattan | Distancia final | camino
   #lista_abierta = [(punto_inicial,0,heuristica(punto_inicial,meta),[])]
-  lista_abierta = [(punto_inicial, 0, distancia_euclidiana(punto_inicial, meta), [])]
+  lista_abierta = [(punto_inicial, 0, distancia_heuristica(punto_inicial, meta), [])]
   
   #lista_abierta = (nodo,g,f,camino)
   considerados = []
@@ -110,7 +111,7 @@ def A_estrella(maze,punto_inicial,meta):
               g_nuevo = g_actual + 10
 
             # f_nuevo = g_nuevo + heuristica(nueva_posicion,meta)
-            f_nuevo = g_nuevo + distancia_euclidiana(nueva_posicion,meta)
+            f_nuevo = g_nuevo + distancia_heuristica (nueva_posicion,meta)
             bandera_lista = False
 
             for nodo,g,f,camino in lista_abierta:

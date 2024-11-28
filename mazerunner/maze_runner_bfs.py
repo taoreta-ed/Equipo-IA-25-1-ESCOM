@@ -60,7 +60,7 @@ def bfs(laberinto, punto_inicial, meta):
 
 #Funcion que reemplaza append
 def mi_append(lista, elemento):
-    """Agrega un elemento al final de la lista."""
+    #"""Agrega un elemento al final de la lista."""
     lista += [elemento]  # Usamos la concatenación para evitar append.
 
 def desplegar_laberinto(maze, camino=None, considerados=None):
