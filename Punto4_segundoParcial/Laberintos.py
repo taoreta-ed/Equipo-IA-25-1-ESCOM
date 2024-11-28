@@ -258,40 +258,40 @@ def seleccion_algoritmo():
 movimientos = [(-1,-1),(-1,0),(0,1),(1,1),(1,0),(1,-1),(0,-1)]
 
 def animar_recorrido(maze,considerados = None,camino = None):
-    figura, ax = plt.subplots()
-    ax.imshow(maze,cmap="binary")
+  figura, ax = plt.subplots()
+  ax.imshow(maze,cmap="binary")
 
-    # Inicializar los puntos
-    puntos_considerados, = ax.plot([],[],"o", color="blue")
-    puntos_camino, = ax.plot([],[],"o", color="red")
+  # Inicializar los puntos
+  puntos_considerados, = ax.plot([],[],"o", color="blue")
+  puntos_camino, = ax.plot([],[],"o", color="red")
 
-    # Crear arrays para las coordenadas
-    explorados_x = [nodo[0] for nodo in considerados]
-    explorados_y = [nodo[1] for nodo in considerados]
-    camino_x = [nodo[0] for nodo in camino]
-    camino_y = [nodo[1] for nodo in camino]
+  # Crear arrays para las coordenadas
+  explorados_x = [nodo[0] for nodo in considerados]
+  explorados_y = [nodo[1] for nodo in considerados]
+  camino_x = [nodo[0] for nodo in camino]
+  camino_y = [nodo[1] for nodo in camino]
 
-    def actualizar(frame):
-        # Mostrar los nodos explorados hasta el frame actual
-        if frame < len(considerados):
-            puntos_considerados.set_data(explorados_y[:frame + 1], explorados_x[:frame + 1])
-        # Mostrar el camino hasta el frame actual
-        if frame >= len(considerados):
-            idx = frame - len(considerados)
-            puntos_camino.set_data(camino_y[:idx + 1], camino_x[:idx + 1])
-        # Detener la animación una vez que se haya mostrado todo
-        if frame == len(considerados) + len(camino) - 1:
-            animacion.event_source.stop()
+  def actualizar(frame):
+      # Mostrar los nodos explorados hasta el frame actual
+      if frame < len(considerados):
+          puntos_considerados.set_data(explorados_y[:frame + 1], explorados_x[:frame + 1])
+      # Mostrar el camino hasta el frame actual
+      if frame >= len(considerados):
+          idx = frame - len(considerados)
+          puntos_camino.set_data(camino_y[:idx + 1], camino_x[:idx + 1])
+      # Detener la animación una vez que se haya mostrado todo
+      if frame == len(considerados) + len(camino) - 1:
+          animacion.event_source.stop()
 
-        return puntos_considerados,puntos_camino
+      return puntos_considerados,puntos_camino
 
-    total_frames = len(considerados) + len(camino)
-    animacion = animation.FuncAnimation(figura,actualizar,frames=total_frames,interval=50,blit=False)
-    plt.show()
+  total_frames = len(considerados) + len(camino)
+  animacion = animation.FuncAnimation(figura,actualizar,frames=total_frames,interval=50,blit=False)
+  plt.show()
 
-    # Contadores
-    print(f"Total de bolitas azules (nodos explorados): {len(considerados)}")
-    print(f"Total de bolitas rojas (camino final): {len(camino)}")
+  # Contadores
+  print(f"Total de bolitas azules (nodos explorados): {len(considerados)}")
+  print(f"Total de bolitas rojas (camino final): {len(camino)}")
 
 camino,considerados = seleccion_algoritmo()
 animar_recorrido(maze,considerados,camino) 
