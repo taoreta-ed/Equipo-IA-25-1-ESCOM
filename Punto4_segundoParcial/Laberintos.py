@@ -2,6 +2,8 @@ import matplotlib.pyplot as plt
 import matplotlib.animation as animation
 import numpy as np
 import random
+import heapq  # Usaremos una cola de prioridad para manejar el nodo con menor costo (el nodo de menor costo va en la parte superior)
+
 
 #Laberinto de 20x35 con 1 representado por paredes y 0 por caminos
 maze = np.array([
@@ -43,80 +45,80 @@ def coordenada_meta():
 punto_inicial = coordenada_inicial()
 meta = coordenada_meta()
 
-#Se le pide al usuario ingresar una selección para la ejecución de un algoritmo
-def seleccion_algoritmo():
-  print("Seleccione un algoritmo para la búsqueda de la meta:")
-  print("1. DFS")
-  print("2. BFS")
-  print("3. A*")
-  print("4. Dijkstra")
-  seleccion = input("Ingrese el número de su selección:")
-
-  if(seleccion == "1"):
-    camino,considerados = DFS(maze,punto_inicial,meta)
-    animar_recorrido(maze,considerados,camino)
-  elif(seleccion == "2"):
-    camino,considerados = BFS(maze,punto_inicial,meta)
-    animar_recorrido(maze,considerados,camino)
-  elif(seleccion == "3"):
-    camino,considerados = A_estrella(maze,punto_inicial,meta)
-    animar_recorrido(maze,considerados,camino)
-  elif(seleccion == "4"):
-    camino,considerados = Dijkstra(maze,punto_inicial,meta)
-    animar_recorrido(maze,considerados,camino)
-  else:
-    print("Selección inválida")
-
-#Tipos de movimiento
-movimientos = [(-1,-1),(-1,0),(0,1),(1,1),(1,0),(1,-1),(0,-1)]
-
 ## Comienza algoritmo DFS
+def DFS(maze,punto_inicial,meta):
+    #Lista para manejar los nodos por explorar (pila)
+    pila = [(punto_inicial,[])]
+    #Matriz de visitados
+    filas = np.shape(maze)[0]
+    columnas = np.shape(maze)[1]
+    visitados = np.zeros((filas,columnas))
+    #Marcamos el nodo inicial como visitados
+    #Definir una lista que contenga a todos los nodos que he visitado
+    considerados = []
 
+    while len(pila) > 0:
+        nodo_actual, camino = pila[-1]
+        pila = pila[:-1]
+
+        #Guardar los nodos que se han ido visitando
+        considerados += [considerados],nodo_actual
+
+        if nodo_actual == meta:
+            return camino + [nodo_actual],considerados
+
+        visitados[nodo_actual[0], nodo_actual[1]] = 1
+        for direccion in movimientos:
+            nueva_posicion = (nodo_actual[0] + direccion[0],nodo_actual[1] + direccion[1])
+            #Ver que el vecino (nueva posición) este dentro del laberinto
+            if ((0 <= nueva_posicion[0] < filas) and (0 <= nueva_posicion[1] < columnas)):
+                ## Ver si el nodo a evaluar (nueva_posicion)  es un camino accesible y ademas si ese nodo no lo he visitado
+                if (maze[nueva_posicion[0], nueva_posicion[1]]) == 0 and (visitados[nueva_posicion[0], nueva_posicion[1]]==0):
+                    pila += [(nueva_posicion, camino + [nodo_actual])]
+    return None,considerados
 
 ## Comienza algoritmo BFS
+def BFS(laberinto,punto_inicial,meta):
+    # Cola para manejar los nodos por explorar (FIFO)
+    cola = [(punto_inicial, [])]
+    # Matriz de visitados
+    filas = np.shape(laberinto)[0]
+    columnas = np.shape(laberinto)[1]
+    visitados = np.zeros((filas,columnas))
+    # Definir una lista que contenga todos los nodos que he visitado
+    considerados = []
 
+    while len(cola) > 0:
+        nodo_actual, camino = cola[0]
+        cola = cola[1:]
+
+        # Guardar los nodos que se han ido visitando
+        #considerados.append(nodo_actual)
+        mi_append(considerados,nodo_actual)
+
+        if nodo_actual == meta:
+            return camino + [nodo_actual],considerados
+
+        visitados[nodo_actual[0], nodo_actual[1]] = 1
+        for direccion in movimientos:
+            nueva_posicion = (nodo_actual[0] + direccion[0], nodo_actual[1] + direccion[1])
+            # Verificar que el vecino esté dentro del laberinto y no haya sido visitado
+            if (0 <= nueva_posicion[0] < filas) and (0 <= nueva_posicion[1] < columnas):
+                if (maze[nueva_posicion[0], nueva_posicion[1]] == 0 and visitados[nueva_posicion[0], nueva_posicion[1]] == 0):
+                    #cola.append((nueva_posicion, camino + [nodo_actual]))
+                    mi_append(cola, (nueva_posicion, camino + [nodo_actual]))
+    return None,considerados
+
+#Funcion que reemplaza append
+def mi_append(lista, elemento):
+    #"""Agrega un elemento al final de la lista."""
+    lista += [elemento]  # Usamos la concatenación para evitar append.
 
 ## Comienza algoritmo A*
 def heuritica_chebyshev(nodo_actual,objetivo):
   d0 = abs(nodo_actual[0] - objetivo[0])
   d1 = abs(nodo_actual[1] - objetivo[1])
   return max(d0,d1)
-
-def animar_recorrido(maze,consideradosB = None,camino = None):
-    figura, ax = plt.subplots()
-    ax.imshow(maze,cmap="binary")
-
-    # Inicializar los puntos
-    puntos_considerados, = ax.plot([],[],"o", color="blue")
-    puntos_camino, = ax.plot([],[],"o", color="red")
-
-    # Crear arrays para las coordenadas
-    explorados_x = [nodo[0] for nodo in consideradosB]
-    explorados_y = [nodo[1] for nodo in consideradosB]
-    camino_x = [nodo[0] for nodo in camino]
-    camino_y = [nodo[1] for nodo in camino]
-
-    def actualizar(frame):
-        # Mostrar los nodos explorados hasta el frame actual
-        if frame < len(consideradosB):
-            puntos_considerados.set_data(explorados_y[:frame + 1], explorados_x[:frame + 1])
-        # Mostrar el camino hasta el frame actual
-        if frame >= len(consideradosB):
-            idx = frame - len(consideradosB)
-            puntos_camino.set_data(camino_y[:idx + 1], camino_x[:idx + 1])
-        # Detener la animación una vez que se haya mostrado todo
-        if frame == len(consideradosB) + len(camino) - 1:
-            animacion.event_source.stop()
-
-        return puntos_considerados,puntos_camino
-
-    total_frames = len(consideradosB) + len(camino)
-    animacion = animation.FuncAnimation(figura,actualizar,frames=total_frames,interval=50,blit=False)
-    plt.show()
-
-    # Contadores
-    print(f"Total de bolitas azules (nodos explorados): {len(consideradosB)}")
-    print(f"Total de bolitas rojas (camino final): {len(camino)}")
 
 def A_estrella(maze,punto_inicial,meta):
   #Lista para manejar los nodos por explorar (pila)
@@ -187,3 +189,109 @@ def A_estrella(maze,punto_inicial,meta):
 
 ## Comienza algoritmo Dijsktra
 
+def Dijkstra(laberinto,punto_inicial,meta):
+    # Cola de prioridad para manejar los nodos según su costo
+    cola_prioridad = [(0, punto_inicial, [])]  # (costo_acumulado, posición, camino)
+    # Matriz de costos acumulados, inicializada con infinito
+    filas, columnas = laberinto.shape
+    costos = np.full((filas, columnas), np.inf)
+    costos[punto_inicial] = 0
+    # Matriz para los nodos visitados
+    visitados = np.zeros((filas, columnas), dtype=bool)
+    # Para visualización de nodos considerados
+    considerados = []
+
+    while cola_prioridad:
+        # Extraer el nodo con menor costo acumulado
+        costo_actual, nodo_actual, camino = heapq.heappop(cola_prioridad)
+        
+        # Guardar los nodos que se han ido considerando
+        considerados.append(nodo_actual)
+        
+        # Si llegamos a la meta, devolver el camino y los considerados
+        if nodo_actual == meta:
+            return camino + [nodo_actual], considerados
+        
+        # Marcar el nodo actual como visitado
+        if visitados[nodo_actual]:
+            continue
+        visitados[nodo_actual] = True
+
+        # Evaluar vecinos
+        for direccion in movimientos:
+            nueva_posicion = (nodo_actual[0] + direccion[0], nodo_actual[1] + direccion[1])
+            
+            # Verificar que el vecino esté dentro del laberinto y que sea accesible
+            if 0 <= nueva_posicion[0] < filas and 0 <= nueva_posicion[1] < columnas:
+                if laberinto[nueva_posicion] == 0 and not visitados[nueva_posicion]:
+                    nuevo_costo = costo_actual + 1  # Peso 1 para cada movimiento
+                    # Si encontramos un camino más barato a nueva_posicion, lo actualizamos
+                    if nuevo_costo < costos[nueva_posicion]:
+                        costos[nueva_posicion] = nuevo_costo
+                        heapq.heappush(cola_prioridad, (nuevo_costo, nueva_posicion, camino + [nodo_actual]))
+
+    return None, considerados  # Si no se encuentra un camino
+
+#Se le pide al usuario ingresar una selección para la ejecución de un algoritmo
+def seleccion_algoritmo():
+  print("Seleccione un algoritmo para la búsqueda de la meta:")
+  print("1. DFS")
+  print("2. BFS")
+  print("3. A*")
+  print("4. Dijkstra")
+  seleccion = input("Ingrese el número de su selección:")
+
+  if(seleccion == "1"):
+    camino,considerados = DFS(maze,punto_inicial,meta)
+  elif(seleccion == "2"):
+    camino,considerados = BFS(maze,punto_inicial,meta)
+  elif(seleccion == "3"):
+    camino,considerados = A_estrella(maze,punto_inicial,meta)
+  elif(seleccion == "4"):
+    camino,considerados = Dijkstra(maze,punto_inicial,meta)
+  else:
+    print("Selección inválida")
+
+  return camino,considerados
+
+#Tipos de movimiento
+movimientos = [(-1,-1),(-1,0),(0,1),(1,1),(1,0),(1,-1),(0,-1)]
+
+def animar_recorrido(maze,considerados = None,camino = None):
+    figura, ax = plt.subplots()
+    ax.imshow(maze,cmap="binary")
+
+    # Inicializar los puntos
+    puntos_considerados, = ax.plot([],[],"o", color="blue")
+    puntos_camino, = ax.plot([],[],"o", color="red")
+
+    # Crear arrays para las coordenadas
+    explorados_x = [nodo[0] for nodo in considerados]
+    explorados_y = [nodo[1] for nodo in considerados]
+    camino_x = [nodo[0] for nodo in camino]
+    camino_y = [nodo[1] for nodo in camino]
+
+    def actualizar(frame):
+        # Mostrar los nodos explorados hasta el frame actual
+        if frame < len(considerados):
+            puntos_considerados.set_data(explorados_y[:frame + 1], explorados_x[:frame + 1])
+        # Mostrar el camino hasta el frame actual
+        if frame >= len(considerados):
+            idx = frame - len(considerados)
+            puntos_camino.set_data(camino_y[:idx + 1], camino_x[:idx + 1])
+        # Detener la animación una vez que se haya mostrado todo
+        if frame == len(considerados) + len(camino) - 1:
+            animacion.event_source.stop()
+
+        return puntos_considerados,puntos_camino
+
+    total_frames = len(considerados) + len(camino)
+    animacion = animation.FuncAnimation(figura,actualizar,frames=total_frames,interval=50,blit=False)
+    plt.show()
+
+    # Contadores
+    print(f"Total de bolitas azules (nodos explorados): {len(considerados)}")
+    print(f"Total de bolitas rojas (camino final): {len(camino)}")
+
+camino,considerados = seleccion_algoritmo()
+animar_recorrido(maze,considerados,camino) 
