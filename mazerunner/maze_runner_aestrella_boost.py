@@ -41,12 +41,12 @@ def heuritica_chebyshev(nodo_actual,objetivo):
   return max(d0,d1)
 
 def animar_recorrido(maze,consideradosB = None,camino = None):
-    fig, ax = plt.subplots()
-    ax.imshow(maze, cmap="binary")
+    figura, ax = plt.subplots()
+    ax.imshow(maze,cmap="binary")
 
     # Inicializar los puntos
-    puntos_considerados, = ax.plot([], [], "o", color="blue")
-    puntos_camino, = ax.plot([], [], "o", color="red")
+    puntos_considerados, = ax.plot([],[],"o", color="blue")
+    puntos_camino, = ax.plot([],[],"o", color="red")
 
     # Crear arrays para las coordenadas
     explorados_x = [nodo[0] for nodo in consideradosB]
@@ -62,15 +62,14 @@ def animar_recorrido(maze,consideradosB = None,camino = None):
         if frame >= len(consideradosB):
             idx = frame - len(consideradosB)
             puntos_camino.set_data(camino_y[:idx + 1], camino_x[:idx + 1])
-
         # Detener la animación una vez que se haya mostrado todo
         if frame == len(consideradosB) + len(camino) - 1:
             ani.event_source.stop()
 
-        return puntos_considerados, puntos_camino
+        return puntos_considerados,puntos_camino
 
     total_frames = len(consideradosB) + len(camino)
-    ani = animation.FuncAnimation(fig, actualizar, frames=total_frames, interval=50, blit=False)
+    animacion = animation.FuncAnimation(figura,actualizar,frames=total_frames,interval=50,blit=False)
     plt.show()
 
     # Contadores
