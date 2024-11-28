@@ -64,7 +64,7 @@ def animar_recorrido(maze,consideradosB = None,camino = None):
             puntos_camino.set_data(camino_y[:idx + 1], camino_x[:idx + 1])
         # Detener la animación una vez que se haya mostrado todo
         if frame == len(consideradosB) + len(camino) - 1:
-            ani.event_source.stop()
+            animacion.event_source.stop()
 
         return puntos_considerados,puntos_camino
 
