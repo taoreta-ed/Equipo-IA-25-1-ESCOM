@@ -47,72 +47,77 @@ meta = coordenada_meta()
 
 ## Comienza algoritmo DFS
 def DFS(maze,punto_inicial,meta):
-    #Lista para manejar los nodos por explorar (pila)
-    pila = [(punto_inicial,[])]
+  #Lista para manejar los nodos por explorar (pila)
+  pila = [(punto_inicial,[])]
+  #Matriz de visitados
+  filas = np.shape(maze)[0]
+  columnas = np.shape(maze)[1]
+  visitados = np.zeros((filas,columnas))
+  #Marcamos el nodo inicial como visitados
+  #Definir una lista que contenga a todos los nodos que he visitado
+  considerados = []
+
+  while len(pila) > 0:
+      nodo_actual, camino = pila[-1]
+      pila = pila[:-1]
+
+      #Guardar los nodos que se han ido visitando
+      #considerados += [considerados],nodo_actual
+
+      #Guarda todos los nodos que han sido evaluados aunque no formen parte del camino final
+      considerados += [nodo_actual]
+
+      if nodo_actual == meta:
+          return camino + [nodo_actual],considerados
+
+      visitados[nodo_actual[0], nodo_actual[1]] = 1
+      for direccion in movimientos:
+          nueva_posicion = (nodo_actual[0] + direccion[0],nodo_actual[1] + direccion[1])
+          #Ver que el vecino (nueva posición) este dentro del laberinto
+          if ((0 <= nueva_posicion[0] < filas) and (0 <= nueva_posicion[1] < columnas)):
+              ## Ver si el nodo a evaluar (nueva_posicion)  es un camino accesible y ademas si ese nodo no lo he visitado
+              if (maze[nueva_posicion[0], nueva_posicion[1]]) == 0 and (visitados[nueva_posicion[0], nueva_posicion[1]]==0):
+                  pila += [(nueva_posicion, camino + [nodo_actual])]
+
+  return None,considerados
+
+## Comienza algoritmo BFS
+def BFS(maze,punto_inicial,meta):
+    # Inicializar la cola y otros parámetros
+    cola = [(punto_inicial, [])]
     #Matriz de visitados
-    filas = np.shape(maze)[0]
-    columnas = np.shape(maze)[1]
-    visitados = np.zeros((filas,columnas))
-    #Marcamos el nodo inicial como visitados
+    filas, columnas = maze.shape
+    visitados = np.zeros((filas, columnas))
+    visitados[punto_inicial[0], punto_inicial[1]] = 1
     #Definir una lista que contenga a todos los nodos que he visitado
     considerados = []
 
-    while len(pila) > 0:
-        nodo_actual, camino = pila[-1]
-        pila = pila[:-1]
-
-        #Guardar los nodos que se han ido visitando
-        considerados += [considerados],nodo_actual
-
-        if nodo_actual == meta:
-            return camino + [nodo_actual],considerados
-
-        visitados[nodo_actual[0], nodo_actual[1]] = 1
-        for direccion in movimientos:
-            nueva_posicion = (nodo_actual[0] + direccion[0],nodo_actual[1] + direccion[1])
-            #Ver que el vecino (nueva posición) este dentro del laberinto
-            if ((0 <= nueva_posicion[0] < filas) and (0 <= nueva_posicion[1] < columnas)):
-                ## Ver si el nodo a evaluar (nueva_posicion)  es un camino accesible y ademas si ese nodo no lo he visitado
-                if (maze[nueva_posicion[0], nueva_posicion[1]]) == 0 and (visitados[nueva_posicion[0], nueva_posicion[1]]==0):
-                    pila += [(nueva_posicion, camino + [nodo_actual])]
-    return None,considerados
-
-## Comienza algoritmo BFS
-def BFS(laberinto,punto_inicial,meta):
-    # Cola para manejar los nodos por explorar (FIFO)
-    cola = [(punto_inicial, [])]
-    # Matriz de visitados
-    filas = np.shape(laberinto)[0]
-    columnas = np.shape(laberinto)[1]
-    visitados = np.zeros((filas,columnas))
-    # Definir una lista que contenga todos los nodos que he visitado
-    considerados = []
-
     while len(cola) > 0:
-        nodo_actual, camino = cola[0]
-        cola = cola[1:]
-
-        # Guardar los nodos que se han ido visitando
-        #considerados.append(nodo_actual)
-        mi_append(considerados,nodo_actual)
-
+        nodo_actual, camino = mi_pop(cola)
+        #Guarda todos los nodos que han sido evaluados aunque no formen parte del camino final
+        considerados += [nodo_actual]
+        
         if nodo_actual == meta:
             return camino + [nodo_actual],considerados
+        
+        for movimiento in movimientos:
+            nueva_posicion = (nodo_actual[0] + movimiento[0], nodo_actual[1] + movimiento[1])
 
-        visitados[nodo_actual[0], nodo_actual[1]] = 1
-        for direccion in movimientos:
-            nueva_posicion = (nodo_actual[0] + direccion[0], nodo_actual[1] + direccion[1])
             # Verificar que el vecino esté dentro del laberinto y no haya sido visitado
             if (0 <= nueva_posicion[0] < filas) and (0 <= nueva_posicion[1] < columnas):
-                if (maze[nueva_posicion[0], nueva_posicion[1]] == 0 and visitados[nueva_posicion[0], nueva_posicion[1]] == 0):
-                    #cola.append((nueva_posicion, camino + [nodo_actual]))
+                if (maze[nueva_posicion[0], nueva_posicion[1]] == 0) and (visitados[nueva_posicion[0], nueva_posicion[1]] == 0):
+                    visitados[nueva_posicion[0], nueva_posicion[1]] = 1
                     mi_append(cola, (nueva_posicion, camino + [nodo_actual]))
-    return None,considerados
+    return None, considerados
 
-#Funcion que reemplaza append
+# Funciones auxiliares
 def mi_append(lista, elemento):
-    #"""Agrega un elemento al final de la lista."""
-    lista += [elemento]  # Usamos la concatenación para evitar append.
+    lista += [elemento]
+
+def mi_pop(lista):
+    elemento = lista[0]
+    lista[:] = lista[1:]
+    return elemento
 
 ## Comienza algoritmo A*
 def heuritica_chebyshev(nodo_actual,objetivo):
@@ -189,11 +194,11 @@ def A_estrella(maze,punto_inicial,meta):
 
 ## Comienza algoritmo Dijsktra
 
-def Dijkstra(laberinto,punto_inicial,meta):
+def Dijkstra(maze,punto_inicial,meta):
     # Cola de prioridad para manejar los nodos según su costo
     cola_prioridad = [(0, punto_inicial, [])]  # (costo_acumulado, posición, camino)
     # Matriz de costos acumulados, inicializada con infinito
-    filas, columnas = laberinto.shape
+    filas, columnas = maze.shape
     costos = np.full((filas, columnas), np.inf)
     costos[punto_inicial] = 0
     # Matriz para los nodos visitados
@@ -205,8 +210,8 @@ def Dijkstra(laberinto,punto_inicial,meta):
         # Extraer el nodo con menor costo acumulado
         costo_actual, nodo_actual, camino = heapq.heappop(cola_prioridad)
         
-        # Guardar los nodos que se han ido considerando
-        considerados.append(nodo_actual)
+        #Guarda todos los nodos que han sido evaluados aunque no formen parte del camino final
+        considerados += [nodo_actual]
         
         # Si llegamos a la meta, devolver el camino y los considerados
         if nodo_actual == meta:
@@ -223,7 +228,7 @@ def Dijkstra(laberinto,punto_inicial,meta):
             
             # Verificar que el vecino esté dentro del laberinto y que sea accesible
             if 0 <= nueva_posicion[0] < filas and 0 <= nueva_posicion[1] < columnas:
-                if laberinto[nueva_posicion] == 0 and not visitados[nueva_posicion]:
+                if maze[nueva_posicion] == 0 and not visitados[nueva_posicion]:
                     nuevo_costo = costo_actual + 1  # Peso 1 para cada movimiento
                     # Si encontramos un camino más barato a nueva_posicion, lo actualizamos
                     if nuevo_costo < costos[nueva_posicion]:
@@ -262,8 +267,8 @@ def animar_recorrido(maze,considerados = None,camino = None):
   ax.imshow(maze,cmap="binary")
 
   # Inicializar los puntos
-  puntos_considerados, = ax.plot([],[],"o", color="blue")
-  puntos_camino, = ax.plot([],[],"o", color="red")
+  puntos_considerados, = ax.plot([],[],"o",color="blue")
+  puntos_camino, = ax.plot([],[],"o",color="red")
 
   # Crear arrays para las coordenadas
   explorados_x = [nodo[0] for nodo in considerados]
