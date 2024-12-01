@@ -54,14 +54,10 @@ meta = coordenada_meta()
 
 ## Comienza algoritmo DFS
 def DFS(maze,punto_inicial,meta):
-    #Comienza medición de tiempo
-    #start_time = time.time()
-
     #Lista para manejar los nodos por explorar (pila)
     pila = [(punto_inicial,[])]
     #Matriz de visitados
-    filas = np.shape(maze)[0]
-    columnas = np.shape(maze)[1]
+    filas,columnas = maze.shape
     visitados = np.zeros((filas,columnas))
     #Marcamos el nodo inicial como visitados
     #Definir una lista que contenga a todos los nodos que he visitado
@@ -71,16 +67,13 @@ def DFS(maze,punto_inicial,meta):
         nodo_actual, camino = pila[-1]
         pila = pila[:-1]
 
-        #Guardar los nodos que se han ido visitando
-        #considerados += [considerados],nodo_actual
-
         #Guarda todos los nodos que han sido evaluados aunque no formen parte del camino final
+        visitados[nodo_actual[0], nodo_actual[1]] = 1
         considerados += [nodo_actual]
 
         if nodo_actual == meta:
             return camino + [nodo_actual],considerados
 
-        visitados[nodo_actual[0], nodo_actual[1]] = 1
         for direccion in movimientos:
             nueva_posicion = (nodo_actual[0] + direccion[0],nodo_actual[1] + direccion[1])
             #Ver que el vecino (nueva posición) este dentro del laberinto
@@ -88,8 +81,6 @@ def DFS(maze,punto_inicial,meta):
                 ## Ver si el nodo a evaluar (nueva_posicion)  es un camino accesible y ademas si ese nodo no lo he visitado
                 if (maze[nueva_posicion[0], nueva_posicion[1]]) == 0 and (visitados[nueva_posicion[0], nueva_posicion[1]]==0):
                     pila += [(nueva_posicion, camino + [nodo_actual])]
-    
-    #tiempo = time.time() - start_time
     return camino,considerados
 
 ## Comienza algoritmo BFS
@@ -268,7 +259,7 @@ for algoritmo in algoritmos:
     tiempos.append(tiempo_ejecucion)
 
 def animar_algoritmos(maze,caminos,considerados_a,nombres_algoritmos,tiempos):
-    fig, axes = plt.subplots(2, 2, figsize=(10,10))
+    fig, axes = plt.subplots(2,2,figsize=(10,10))
     axes = axes.flatten()
 
     animaciones = []
@@ -281,7 +272,7 @@ def animar_algoritmos(maze,caminos,considerados_a,nombres_algoritmos,tiempos):
         tiempo = tiempos[i]
 
         ax.imshow(maze, cmap='binary')
-        ax.set_title(f'Algoritmo {nombre} - Tiempo: {tiempo:.8f}s')
+        ax.set_title(f'Algoritmo {nombre} - Tiempo: {tiempo:.6f}s')
 
         explorados_x = [nodo[0] for nodo in considerados]
         explorados_y = [nodo[1] for nodo in considerados]
@@ -302,17 +293,12 @@ def animar_algoritmos(maze,caminos,considerados_a,nombres_algoritmos,tiempos):
             return puntos_considerados, puntos_camino
 
         anim = animation.FuncAnimation(
-            fig, actualizar, frames=total_frames, interval=50, blit=False,
+            fig, actualizar, frames=total_frames, interval=100, blit=False,
             fargs=(puntos_considerados, puntos_camino, explorados_x, explorados_y, camino_x, camino_y),
             repeat=False)
         animaciones.append(anim)
 
     plt.tight_layout()
     plt.show()
-
-    # Contadores
-    #print(f"Total de bolitas azules (nodos explorados): {len(considerados)}")
-    #print(f"Total de bolitas rojas (camino final): {len(camino)}")
-    #print(f"Tiempo de ejecución: {tiempo} segundos")
 
 animar_algoritmos(maze,caminos,considerados_a,nombres_algoritmos,tiempos)
