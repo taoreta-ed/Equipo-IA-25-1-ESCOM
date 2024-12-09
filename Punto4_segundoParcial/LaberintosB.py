@@ -8,6 +8,7 @@ import numpy as np
 import random
 import heapq 
 import time
+import tracemalloc
 
 #Laberinto de 20x35 con 1 representado por paredes y 0 por caminos
 maze = np.array([
@@ -59,6 +60,9 @@ if (0 <= punto_inicial[0] < filas and 0 <= punto_inicial[1] < columnas and maze[
     if (0 <= meta[0] < filas and 0 <= meta[1] < columnas and maze[meta[0], meta[1]] == 0):
         ## Comienza algoritmo DFS
         def DFS(maze,punto_inicial,meta):
+            # Medición de tiempo y memoria
+            tracemalloc.start()
+            start_time = time.time()
             #Lista para manejar los nodos por explorar (pila)
             pila = [(punto_inicial,[])]
             #Matriz de visitados

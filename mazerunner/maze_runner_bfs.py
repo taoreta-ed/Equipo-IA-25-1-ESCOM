@@ -1,5 +1,6 @@
 import matplotlib.pyplot as plt
 import numpy as np
+import time
 
 # Laberinto de 15x15 con 1 representado por paredes y 0 por caminos
 maze = np.array([
@@ -68,9 +69,11 @@ def desplegar_laberinto(maze, camino=None, considerados=None):
     if considerados:
         for i in considerados:
             plt.plot(i[1], i[0], 'o', color='blue')
+            plt.pause(0.0001)
     if camino:
         for j in camino:
             plt.plot(j[1], j[0], 'o', color='red')
+            plt.pause(0.0001)
     plt.show()
 
 # Ejecutar BFS
