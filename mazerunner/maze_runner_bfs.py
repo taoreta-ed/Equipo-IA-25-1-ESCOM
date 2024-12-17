@@ -48,6 +48,7 @@ def bfs(laberinto, punto_inicial, meta):
         if nodo_actual == meta:
             return camino + [nodo_actual], considerados
 
+        #Marca el nodo actual como visitado dentro del laberinto
         visitados[nodo_actual[0], nodo_actual[1]] = 1
         for direccion in movimientos:
             nueva_posicion = (nodo_actual[0] + direccion[0], nodo_actual[1] + direccion[1])

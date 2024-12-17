@@ -46,7 +46,7 @@ def desplegar_laberinto(maze,camino = None,considerados = None):
     plt.imshow(maze,cmap = 'binary')
     if considerados:
         for i in considerados:
-            plt.plot(i[1],i[0],'o',color = 'pink')
+            plt.plot(i[1],i[0],'x',color = 'pink')
     if camino:
         for j in camino:
             plt.plot(j[1],j[0],'o',color = 'purple')
@@ -62,8 +62,7 @@ def A_estrella(maze,punto_inicial,meta):
 
   #lista_abierta = [(punto_inicial,0,heuristica(punto_inicial,meta),[])]
   lista_abierta = [(punto_inicial, 0, distancia_euclidiana(punto_inicial, meta), [])]
-  
-  #lista_abierta = (nodo,g,f,camino)
+  #lista_abierta = (nodo,g= manhattan,f,camino)
   considerados = []
 
   #Matriz de visitados
