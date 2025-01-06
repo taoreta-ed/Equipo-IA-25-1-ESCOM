@@ -87,7 +87,7 @@ def dfs(maze,punto_inicial,meta):
                 #Ver si el nodo a evaluar (nueva_posicion) es un cambio accesible y además si ese nodo NO LO HE VISITADO
                 if((maze[nueva_posicion[0],nueva_posicion[1]]) == 0 and visitados[nueva_posicion[0],nueva_posicion[1]] == 0):
                     pila += [(nueva_posicion,camino + [nodo_actual])]
-    return None,considerados
+    return [],considerados
 
 
 def bfs(maze, punto_inicial, meta):
@@ -120,7 +120,7 @@ def bfs(maze, punto_inicial, meta):
                 if (maze[nueva_posicion[0], nueva_posicion[1]] == 0 and visitados[nueva_posicion[0], nueva_posicion[1]] == 0):
                     #cola.append((nueva_posicion, camino + [nodo_actual]))
                     mi_append(cola, (nueva_posicion, camino + [nodo_actual]))
-    return None, considerados
+    return [], considerados
 
 #Funcion que reemplaza append en bfs
 def mi_append(lista, elemento):
@@ -129,6 +129,7 @@ def mi_append(lista, elemento):
    
     
 def main():
+    print("Carrera de agentes")
     agente_uno_pos= posicion_inicial_agente(maze)
     agente_dos_pos= posicion_inicial_agente(maze)
     
@@ -141,36 +142,73 @@ def main():
     print(f"Meta:{meta} ")
 
     cont_movimientos=0
-    movimientos_totales=500
+    movimientos_totales=100
     
+    #Obtenemos los caminos de los agentes
+    #AGENTE 1 CON DFS
+    camino_dfs, _=dfs(maze,agente_dos_pos,meta)
+    #AGENTE 2 CON BFS
+    camino_bfs, _ = bfs(maze, agente_dos_pos, meta)
 
+    # Validar caminos
+    if not camino_dfs:  # Si el camino de DFS está vacío
+        print("DFS no encontró un camino.")
+        return
+    if not camino_bfs:  # Si el camino de BFS está vacío
+        print("BFS no encontró un camino.")
+        return
+
+    indice_dfs = 0
+    indice_bfs = 0
     
     while cont_movimientos < movimientos_totales:
         cont_movimientos+=1
 
         #AGENTE 1 CON DFS
-        camino_dfs, _=dfs(maze,agente_dos_pos,meta)
-        if camino_dfs:
-            return f"Agente dfs ganador con {cont_movimientos} movimientos"
-            break
-        if camino_dfs:
+        if indice_dfs < len(camino_dfs):
+            agente_uno_pos = camino_dfs[indice_dfs]
+            indice_dfs += 1
+
+            #Revisar si el agente llego a la meta
+            if agente_uno_pos == meta:
+                print(f"Agente DFS en {agente_uno_pos} ha ganado en {cont_movimientos} movimientos.")
+                return
+        
+        #if camino_dfs:
+            #return f"Agente dfs ganador con {cont_movimientos} movimientos"
+            #break
+        #if camino_dfs:
+            #Avanzar al siguiente paso del camino utilizando el indice
+            #agente_uno_pos = camino_dfs[indice_dfs]
+            #Incrementar el indice para apuntar al proximo paso
+            #if indice_dfs < len(camino_dfs) - 1:  # Asegurarse de no exceder los límites
+                #indice_dfs += 1
+
             #Toma la ultima posicion de la lista y la actualiza como nueva posicion
-            agente_uno_pos = camino_dfs[-1]
+            #agente_uno_pos = camino_dfs[-1]
 
         #AGENTE 2 CON BFS
-        camino_bfs, _ = bfs(maze, agente_dos_pos, meta)
-        if camino_bfs: 
-            return f"Agente bfs ganador con {cont_movimientos} movimientos"
-            break
-        if camino_bfs:
+        if indice_bfs < len(camino_bfs):
+            agente_dos_pos = camino_bfs[indice_bfs]
+            indice_bfs += 1
+
+            #Revisar si el agente llego a la meta
+            if agente_dos_pos == meta:
+                print(f"Agente BFS en {agente_dos_pos} ha ganado en {cont_movimientos} movimientos.")
+                return
+        #if camino_bfs: 
+            #return f"Agente bfs ganador con {cont_movimientos} movimientos"
+            #break
+        #if camino_bfs:
             #Toma la ultima posicion de la lista y la actualiza como nueva posicion
-            agente_dos_pos = camino_bfs[-1]  
+            #agente_dos_pos = camino_bfs[-1]  
 
         print(f"Turno {cont_movimientos}:")
         print(f"  Agente DFS en {agente_uno_pos}")
         print(f"  Agente BFS en {agente_dos_pos}")
 
 
+main()
 
 
     
