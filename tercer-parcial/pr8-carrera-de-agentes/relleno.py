@@ -151,12 +151,19 @@ def main():
     camino_bfs, _ = bfs(maze, agente_dos_pos, meta)
 
     # Validar caminos
-    if not camino_dfs:  # Si el camino de DFS está vacío
+    #if not camino_dfs:  # Si el camino de DFS está vacío
+        #print("DFS no encontró un camino.")
+        #return
+    #if not camino_bfs:  # Si el camino de BFS está vacío
+        #print("BFS no encontró un camino.")
+        #return
+    if not camino_dfs and not camino_bfs:
+        print("No se encontró un camino para ninguno de los agentes.")
+        return
+    elif not camino_dfs:
         print("DFS no encontró un camino.")
-        return
-    if not camino_bfs:  # Si el camino de BFS está vacío
+    elif not camino_bfs:
         print("BFS no encontró un camino.")
-        return
 
     indice_dfs = 0
     indice_bfs = 0
