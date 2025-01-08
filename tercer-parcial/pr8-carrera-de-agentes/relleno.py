@@ -150,13 +150,6 @@ def main():
     #AGENTE 2 CON BFS
     camino_bfs, _ = bfs(maze, agente_dos_pos, meta)
 
-    # Validar caminos
-    #if not camino_dfs:  # Si el camino de DFS está vacío
-        #print("DFS no encontró un camino.")
-        #return
-    #if not camino_bfs:  # Si el camino de BFS está vacío
-        #print("BFS no encontró un camino.")
-        #return
     if not camino_dfs and not camino_bfs:
         print("No se encontró un camino para ninguno de los agentes.")
         return
@@ -180,19 +173,6 @@ def main():
             if agente_uno_pos == meta:
                 print(f"Agente DFS en {agente_uno_pos} ha ganado en {cont_movimientos} movimientos.")
                 return
-        
-        #if camino_dfs:
-            #return f"Agente dfs ganador con {cont_movimientos} movimientos"
-            #break
-        #if camino_dfs:
-            #Avanzar al siguiente paso del camino utilizando el indice
-            #agente_uno_pos = camino_dfs[indice_dfs]
-            #Incrementar el indice para apuntar al proximo paso
-            #if indice_dfs < len(camino_dfs) - 1:  # Asegurarse de no exceder los límites
-                #indice_dfs += 1
-
-            #Toma la ultima posicion de la lista y la actualiza como nueva posicion
-            #agente_uno_pos = camino_dfs[-1]
 
         #AGENTE 2 CON BFS
         if indice_bfs < len(camino_bfs):
@@ -202,13 +182,7 @@ def main():
             #Revisar si el agente llego a la meta
             if agente_dos_pos == meta:
                 print(f"Agente BFS en {agente_dos_pos} ha ganado en {cont_movimientos} movimientos.")
-                return
-        #if camino_bfs: 
-            #return f"Agente bfs ganador con {cont_movimientos} movimientos"
-            #break
-        #if camino_bfs:
-            #Toma la ultima posicion de la lista y la actualiza como nueva posicion
-            #agente_dos_pos = camino_bfs[-1]  
+                return 
 
         print(f"Turno {cont_movimientos}:")
         print(f"  Agente DFS en {agente_uno_pos}")
@@ -216,11 +190,3 @@ def main():
 
 
 main()
-
-
-    
-
-
-
-
-
