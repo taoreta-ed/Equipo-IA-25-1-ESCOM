@@ -16,10 +16,7 @@ relaciones = [
     ["Elena","Luis"]       #10
 ]
 
-tios = []
-abuelos = []
-
-def hijos():
+def padres():
     padre = []
     hijo = []
     relacionHijo = {}
@@ -33,10 +30,33 @@ def hijos():
         relacionHijo[padre[i]] += [hijo[i]]
     return relacionHijo
 
-print(hijos())
+#print(padres())
+
+def parejas():
+    padre = padres()
+    relacionPareja = {}
+    relacionPadreHijo = {}
+
+    for padre,hijos in padre.items():
+        for hijo in hijos:
+            if hijo not in relacionPadreHijo:
+                relacionPadreHijo[hijo] = []
+            relacionPadreHijo[hijo] += [padre]
+    
+    # Determinamos las parejas: dos o más padres para el mismo hijo
+    for hijo, lista_padres in relacionPadreHijo.items():
+        if len(lista_padres) > 1:
+            relacionPareja[hijo] = lista_padres
+    
+    return relacionPareja
+
+print(parejas())
+
+def tios():
+    return
 
 def abuelos():
-    relacionHijo = hijos()
+    relacionHijo = padres()
     relacionAbuelos = {}
 
     for padre in relacionHijo:
@@ -48,7 +68,7 @@ def abuelos():
 
     return relacionAbuelos
 
-print("Relaciones de abuelos y nietos:", abuelos())
+#print("Relaciones de abuelos y nietos:", abuelos())
 
 
 #    padre,hijo = hijos()
