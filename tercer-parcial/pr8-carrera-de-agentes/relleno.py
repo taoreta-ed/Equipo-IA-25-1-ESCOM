@@ -8,33 +8,34 @@
 import numpy as np
 import random
 import matplotlib.pyplot as plt
+import matplotlib.animation as animation
 
 maze = np.array([
-    [0,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
-    [0,0,0,0,0,0,1,0,1,1,1,1,1,0,0,0,0,0,0,1],
-    [0,0,1,1,1,0,1,0,0,0,1,0,1,0,1,1,1,1,0,1],
+    [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+    [1,0,0,0,0,0,1,0,1,1,1,1,1,0,0,0,0,0,0,1],
+    [1,0,1,1,1,0,1,0,0,0,1,0,1,0,1,1,1,1,0,1],
     [1,0,1,0,1,0,1,0,1,1,1,0,0,0,0,0,1,0,0,1],
     [1,0,1,0,1,1,1,0,0,1,0,0,1,1,1,1,0,0,1,1],
-    [1,0,0,0,0,0,1,0,1,1,0,0,1,0,0,0,1,0,1,1],
+    [1,0,0,0,0,0,0,0,1,1,0,0,0,0,0,0,1,0,1,1],
     [1,0,1,1,0,1,1,0,0,0,0,0,1,0,1,0,1,0,1,1],
-    [1,0,0,0,0,1,0,0,0,1,1,1,1,1,1,0,1,0,1,1],
-    [1,1,1,0,1,1,0,1,1,1,1,0,0,1,1,0,1,1,0,1],
+    [1,0,0,0,0,0,0,0,0,1,1,1,1,1,1,0,1,0,1,1],
+    [1,1,1,0,1,1,0,1,0,0,1,0,0,1,1,0,1,0,0,1],
     [1,0,0,0,0,0,1,0,1,1,0,0,1,1,1,0,1,1,0,1],
-    [1,0,1,1,1,1,0,0,1,0,1,1,0,0,1,0,1,1,0,1],
+    [1,0,1,1,0,1,0,0,1,0,1,1,0,0,1,0,1,0,0,1],
     [1,0,0,1,0,0,0,0,0,0,0,1,1,0,1,0,1,0,1,1],
-    [1,0,0,1,1,1,1,0,0,1,0,1,0,0,1,0,0,1,0,1],
-    [1,0,0,0,0,0,1,1,1,0,0,0,0,0,1,0,1,1,0,1],
-    [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1],
+    [1,0,0,1,1,1,1,0,0,1,0,1,0,0,1,0,0,0,0,1],
+    [1,0,0,0,0,0,1,0,1,0,0,0,0,0,1,0,1,1,0,1],
+    [1,1,1,0,1,1,1,0,1,1,1,0,1,1,1,0,1,1,1,1],
     [1,0,0,0,1,0,1,1,1,0,1,0,1,0,0,0,0,1,1,1],
-    [1,0,1,1,1,1,0,1,0,0,1,0,0,0,0,1,0,0,0,1],
-    [1,0,0,0,0,1,0,0,1,1,0,1,1,0,0,0,0,0,1,1],
-    [1,0,0,0,0,1,0,1,1,1,1,1,1,1,0,0,0,0,0,0],
-    [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,0,0]
+    [1,0,1,1,1,1,0,1,0,0,0,0,0,0,0,1,0,0,0,1],
+    [1,0,0,0,0,0,0,0,1,0,0,0,1,0,0,0,0,0,1,1],
+    [1,0,0,0,0,1,0,0,1,1,1,1,1,1,0,0,0,0,0,1],
+    [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]
 ])
 
 #Inicializar de punto inicial y final 
 punto_inicial = (0, 0)
-meta = (19, 19)
+meta = (18, 18)
 
 
 #Posicion inicial de los agentes
@@ -172,7 +173,7 @@ def main():
             #Revisar si el agente llego a la meta
             if agente_uno_pos == meta:
                 print(f"Agente DFS en {agente_uno_pos} ha ganado en {cont_movimientos} movimientos.")
-                return
+                return animar_recorrido(maze, camino_dfs, camino_bfs)
 
         #AGENTE 2 CON BFS
         if indice_bfs < len(camino_bfs):
@@ -182,11 +183,50 @@ def main():
             #Revisar si el agente llego a la meta
             if agente_dos_pos == meta:
                 print(f"Agente BFS en {agente_dos_pos} ha ganado en {cont_movimientos} movimientos.")
-                return 
+                return animar_recorrido(maze, camino_dfs, camino_bfs)
 
         print(f"Turno {cont_movimientos}:")
         print(f"  Agente DFS en {agente_uno_pos}")
         print(f"  Agente BFS en {agente_dos_pos}")
+    
+
+
+def animar_recorrido(maze,corredor1 = None,corredor2 = None):
+  figura, ax = plt.subplots()
+  ax.imshow(maze,cmap="binary")
+
+  # Inicializar los puntos
+  puntos_corredor1, = ax.plot([],[],"o",color="blue")
+  puntos_corredor2, = ax.plot([],[],"x",color="red")
+
+  # Crear arrays para las coordenadas
+  explorados_x = [nodo[0] for nodo in corredor1]
+  explorados_y = [nodo[1] for nodo in corredor1]
+  camino_x = [nodo[0] for nodo in corredor2]
+  camino_y = [nodo[1] for nodo in corredor2]
+
+  #Variable que nos dice cual len de corredor es mas grande
+  mayor_corredor = len(corredor1) if len(corredor1) > len(corredor2) else len(corredor2)
+
+  def actualizar(frame):
+      # Mostrar los nodos explorados hasta el frame actual
+      if frame < mayor_corredor:
+          puntos_corredor1.set_data(explorados_y[:frame + 1], explorados_x[:frame + 1])
+          puntos_corredor2.set_data(camino_y[:frame + 1], camino_x[:frame + 1])
+      # Mostrar el camino hasta el frame actual
+      #if frame >= len(corredor1):
+          #idx = frame - len(corredor1)
+          #puntos_corredor2.set_data(camino_y[:idx + 1], camino_x[:idx + 1])
+      # Detener la animación una vez que se haya mostrado todo
+      if frame == mayor_corredor - 1:
+          animacion.event_source.stop()
+
+      return puntos_corredor1,puntos_corredor2
+
+  #total_frames = len(corredor1) + len(corredor2)
+  total_frames = mayor_corredor
+  animacion = animation.FuncAnimation(figura,actualizar,frames=total_frames,interval=50,blit=False)
+  plt.show()
 
 
 main()
