@@ -13,9 +13,36 @@ def normalizacion_zscore(X):
     desviacion = np.std(X, axis=0)
     return (X - media)/desviacion, media, desviacion
 
+def normalizacion_minmax(X):
+    x_max = np.max(X, axis=0)
+    x_min = np.min(X, axis=0)
+    return (X - x_min)/(x_max - x_min), x_min, x_max
+
+def normalizacion_decimal(X):
+    J = np.ceil(np.log10(np.max(np.abs(X), axis=0)))
+    scale = 10**J
+    return X/scale, np.zeros_like(J), scale
+
+def normalizacion_log(X):
+    offset = np.min(X, axis=0)
+    #Aseguramos valores positivos sumando el mínmo + 1
+    X_shifted = X - offset + 1
+    return np.log(X_shifted), offset, None
+
+def normalizacion_robust(X):
+    mediana = np.median(X, axis=0)
+    q75, q25 = np.percentile(X, [75, 25], axis=0)
+    iqr = q75 - q25
+    return (X - mediana)/iqr, mediana, iqr
+
 def main():
     #Normalizar las caracteristicas
-    X, media, desviacion = normalizacion_zscore(X_no_norm)
+    X, media, desviacion = normalizacion_zscore(X_no_norm) #Normalizar el dato de entrada para zscore
+    #X, x_min, x_max = normalizacion_minmax(X_no_norm) #Normalizar el dato de entrada para minmax
+    #X, offset, _ = normalizacion_log(X_no_norm) #Normalizar el dato de entrada para log
+    #X, mediana, iqr = normalizacion_robust(X_no_norm) #Normalizar el dato de entrada para robust
+    #X, _, scale = normalizacion_decimal(X_no_norm) #Normalizar el dato de entrada para decimal
+    #X = X_no_norm #Sin normalización
 
     #Definición de hiperparámetros
     lr = 0.01 #Tasa de aprendizaje
@@ -60,8 +87,12 @@ def main():
     plt.show()
 
     #Fase de operación: Para hacer estimaciones
-    X_test = np.array([[2025, 2]]) #Año y segunda caracteristica
-    X_test_norm = (X_test - media)/desviacion #Normalizar el dato de prueba
+    X_test = np.array([[2025, 4]]) #Año y segunda caracteristica
+    X_test_norm = (X_test - media)/desviacion #Normalizar el dato de prueba para zscore
+    #X_test_norm = (X_test - x_min)/(x_max - x_min) #Normalizar el dato de prueba para minmax
+    #X_test_norm = np.log(X_test - offset + 1) #Normalizar el dato de prueba para log
+    #X_test_norm = (X_test - mediana)/iqr #Normalizar el dato de prueba para robust
+    #X_test_norm = X_test/scale #Normalizar el dato de prueba para decimal
     X_test_norm = X_test_norm.reshape(1, -1) #Ajustar la forma del dato de prueba
 
     Y_test = b[0] + b[1]*X_test_norm[0,0] + b[2]*X_test_norm[0,1]
