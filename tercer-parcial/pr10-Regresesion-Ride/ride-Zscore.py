@@ -55,6 +55,9 @@ def main():
 
     #Entrenamiento con Early Stop
     early_stop_epoch = max_epocas
+    prev_J = float('inf') #Un valor muy grande para el primer cálculo
+    tolerancia = 1e-6 #Umbral para el cambio en el costo
+
     for epoch in range(max_epocas):
         #Calcular Y obtenido
         Yobt = b[0] + b[1]*X[:,0] + b[2]*X[:,1]
@@ -63,8 +66,12 @@ def main():
         J = (1 / (2*m)) * np.sum((yd - Yobt)**2) + (lamda / (2*m)) * np.sum(b[1:]**2)
         grafica += [J]
 
+        #Calcular cambio en el costo delta_J
+        delta_J = abs(prev_J - J)
+        prev_J = J #Actualizar el costo previo
+
         #Verificar Early Stop
-        if J < epsilon:
+        if J < epsilon or delta_J < tolerancia:
             early_stop_epoch = epoch + 1
             break
 
