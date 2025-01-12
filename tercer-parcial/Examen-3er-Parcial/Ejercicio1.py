@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 # Ejercicio 1 
 #  Realizar una base de conocimiento que tenga Nombre del alumno y materias tomadas. 3 materias máximo (Int. Artificial, ML y Procesamiento de Lenguaje)
 #  Determinar si el alumno puede tomar una cuerta materia. Si ha tomado las 3 materias, no puede tomar más.
@@ -6,35 +5,37 @@
 #  Si solamente tomó 1 materia arroja las 2 posibles materias que puede tomar. 
 alumnos = [
     ["Cassandra",["Inteligencia Artificial","Machine Learning","Procesamiento de Lenguaje"]],
-    ["Eduardo",["Procesamiento de Lenguaje","Inteligencia Artificial"]],
-    ["Ramón",["Machine Learning"]]
+    ["Ramón",["Machine Learning"]],
+    ["Eduardo",["Inteligencia Artificial","Procesamiento de Lenguaje"]],
+    ["Pieck",["Inteligencia Artificial","Machine Learning","Procesamiento de Lenguaje","Cálculo"]]
 ]
 
 materias = ["Inteligencia Artificial","Machine Learning","Procesamiento de Lenguaje"]
 
 for i in range(len(alumnos)):
+    alumno = alumnos[i][0]
+    materias_tomadas = alumnos[i][1]
 
+    coincidencia_total = 0
 
+    #Determinar si el alumno tiene más de 3 materias
+    if(len(materias_tomadas) > 3):
+        print(f"{alumno} no puede tomar más de 3 materias")
 
+    #Determinar si el alumno ya ha tomado las 3 materias
+    if len(materias_tomadas) == 3:
+        print(f"{alumno} ya ha tomado las 3 materias")
 
+    #Determinar si el alumno ha tomado 2 materias
+    if len(materias_tomadas) == 2:
+        for j in range(len(materias)-1):
+            for k in range(len(materias_tomadas)-1):
+                if materias[j] != materias_tomadas[k]:
+                    print(f"{alumno} puede tomar la materia {materias[j]}")    
 
-
-=======
-#Realizar una base de conocimiento que tengo el nombre del alumno y materias tomadas.
-#3 materias máximo (IA, Machina Learning y Procesamiento de lenguaje)
-#Determinar si el alumno puede tomar una cuarta materia si ha tomado las 3
-#Si ha tomado 2, arrojar la tercera que no está
-#Si sólo tomó 1, arrojar las dos posibles que puede tomar
-relaciones = [
-    ["Juan","Pedro"],       #1
-    ["Pedro","María"],      #2
-    ["Pedro","Luis"],       #3
-    ["Lucía","Pedro"],      #4
-    ["Carlos","Vanessa"],   #5
-    ["Vanessa","Sofía"],    #6
-    ["Vanessa","Diego"],    #7
-    ["Lucía","Matías"],     #8
-    ["Matías","Diego"],     #9
-    ["Elena","Luis"]       #10
-]
->>>>>>> c54efd489d05a016e6a5ee7a55280038d35ddf3b
+    #Determinar si el alumno ha tomado 1 materias
+    if len(materias_tomadas) == 1:
+        for j in range(len(materias)):
+            for k in range(len(materias_tomadas)):
+                if materias[j] != materias_tomadas[k]:
+                    print(f"{alumno} puede tomar la materia {materias[j]}")
