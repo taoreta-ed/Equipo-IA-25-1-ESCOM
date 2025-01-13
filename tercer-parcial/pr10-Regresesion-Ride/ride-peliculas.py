@@ -1,11 +1,12 @@
+#Pelicula según su año, millones de entradas vendidas y millones de dólares recaudados
 import numpy as np
 import matplotlib.pyplot as plt
 
 #Fase de entrenamiento
 #Definición de los datos de entrada
-X_no_norm = np.array([[2019,4], [2020,2], [2021,4], [2022,4], [2023,2], [2024,4]]) #Año y segunda caracteristica (número de puertas)
+X_no_norm = np.array([[2019,4], [2020,4.3], [2021,5.6], [2022,7], [2023,8.2], [2024,10]]) #Año y segunda caracteristica (millones de entradas vendidas)
 #Etiquetas de salida
-yd = np.array([4, 5, 6.5, 7, 8.5, 12])
+yd = np.array([4, 6, 8, 10, 12, 14])
 
 #Normalización usando Z-score
 def normalizacion_zscore(X):
@@ -94,7 +95,7 @@ def main():
     plt.show()
 
     #Fase de operación: Para hacer estimaciones
-    X_test = np.array([[2024, 4]]) #Año y segunda caracteristica
+    X_test = np.array([[2025, 10]]) #Año y segunda caracteristica
     X_test_norm = (X_test - media)/desviacion #Normalizar el dato de prueba para zscore
     #X_test_norm = (X_test - x_min)/(x_max - x_min) #Normalizar el dato de prueba para minmax
     #X_test_norm = np.log(X_test - offset + 1) #Normalizar el dato de prueba para log
@@ -103,6 +104,6 @@ def main():
     X_test_norm = X_test_norm.reshape(1, -1) #Ajustar la forma del dato de prueba
 
     Y_test = b[0] + b[1]*X_test_norm[0,0] + b[2]*X_test_norm[0,1]
-    print(f"Para el año {X_test[0,0]} con característica adicional {X_test[0,1]} se estiman {Y_test:.2f} millones de ventas de coches")
+    print(f"Para el año {X_test[0,0]} con característica adicional {X_test[0,1]} se estiman {Y_test:.2f} millones de dólares recaudados")
 
 main()
