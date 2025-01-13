@@ -13,7 +13,9 @@ relaciones = [
     ["Vanessa","Diego"],    #7
     ["Lucía","Matías"],     #8
     ["Matías","Diego"],     #9
-    ["Elena","Luis"]       #10
+    ["Elena","Luis"],       #10
+    ["Juan","Matías"]#,     #11
+    #["Matías","Sofía"]      #12
 ]
 
 def padres():
@@ -28,6 +30,7 @@ def padres():
         if padre[i] not in relacionHijo:
             relacionHijo[padre[i]] = []
         relacionHijo[padre[i]] += [hijo[i]]
+    
     return relacionHijo
 
 def hijos():
@@ -42,32 +45,85 @@ def hijos():
         if hijo[i] not in relacionPadre:
             relacionPadre[hijo[i]] = []
         relacionPadre[hijo[i]] += [padre[i]]
+    
     return relacionPadre
 
-print(padres())
-
 def parejas():
-    padre = padres()
-    relacionPareja = {}
-    relacionPadreHijo = {}
+    relacionHijos = hijos()
+    parejas = {} 
 
-    for padre,hijos in padre.items():
-        for hijo in hijos:
-            if hijo not in relacionPadreHijo:
-                relacionPadreHijo[hijo] = []
-            relacionPadreHijo[hijo] += [padre]
+    for hijo in relacionHijos:
+        padres = relacionHijos[hijo]
+        if len(padres) == 2:
+            padre1, padre2 = padres
+            # Verificar si ambos padres no están ya en el diccionario
+            if padre1 not in parejas and padre2 not in parejas:
+                parejas[padre1] = padre2
     
-    # Determinamos las parejas: dos o más padres para el mismo hijo
-    for hijo, lista_padres in relacionPadreHijo.items():
-        if len(lista_padres) > 1:
-            relacionPareja[hijo] = lista_padres
+    return parejas
     
-    return relacionPareja
+def abuelos():
+    relacionHijo = hijos()
+    relacionParejas = parejas()
+    relacionAbuelos = {}
 
-#print(parejas())
+    for padre in relacionHijo:
+        for hijo in relacionHijo[padre]:
+            if hijo in relacionHijo:
+                if padre not in relacionAbuelos:
+                    relacionAbuelos[padre] = []
+                for i in relacionHijo[hijo]:
+                    relacionAbuelos[padre] += [i]
+
+                # Si el padre tiene pareja, agregar los mismos nietos para la pareja
+                if padre in relacionParejas:
+                    pareja = relacionParejas[padre]
+                    if pareja not in relacionAbuelos:
+                        relacionAbuelos[pareja] = []
+                    for nieto in relacionHijo[hijo]:
+                        if nieto not in relacionAbuelos[pareja]:
+                            relacionAbuelos[pareja].append(nieto)
+
+    return relacionAbuelos
+
+def abuelos():
+    # Diccionario de padres e hijos
+    relacionHijo = hijos()
+    # Diccionario de parejas
+    relacionParejas = parejas()
+    # Diccionario final de abuelos (key: nieto -> value: lista de abuelos)
+    relacionAbuelos = {}
+
+    # Recorrer los padres y sus hijos
+    for padre, hijos_lista in relacionHijo.items():
+        for hijo in hijos_lista:
+            # Verificar si el hijo tiene hijos (nietos)
+            if hijo in relacionHijo:
+                for nieto in relacionHijo[hijo]:
+                    # Si el nieto no está en el diccionario, inicializamos la lista de abuelos
+                    if nieto not in relacionAbuelos:
+                        relacionAbuelos[nieto] = []
+                    # Agregar al padre (abuelo) si no está en la lista de abuelos del nieto
+                    if padre not in relacionAbuelos[nieto]:
+                        relacionAbuelos[nieto].append(padre)
+                    # Verificar si el padre tiene pareja y agregarla como abuelo también
+                    if padre in relacionParejas:
+                        pareja = relacionParejas[padre]
+                        if pareja not in relacionAbuelos[nieto]:
+                            relacionAbuelos[nieto].append(pareja)
+    
+    return relacionAbuelos
+
+
+
+print(padres())
+print(parejas())
+print(hijos())
+print("\n")
+print(abuelos())
 
 def tios():
-    pareja = parejas()
+    #pareja = parejas()
     relacionTios = {}
     relacionPadreHijo = padres()
     relacionHijoPadre = {}
@@ -89,18 +145,6 @@ def tios():
 
 #print(tios())
 
-def abuelos():
-    relacionHijo = padres()
-    relacionAbuelos = {}
-
-    for padre in relacionHijo:
-        for hijo in relacionHijo[padre]:
-            if hijo in relacionHijo:
-                if padre not in relacionAbuelos:
-                    relacionAbuelos[padre] = []
-                relacionAbuelos[padre].extend(relacionHijo[hijo])
-
-    return relacionAbuelos
 
 #print("Relaciones de abuelos y nietos:", abuelos())
 
@@ -144,3 +188,4 @@ def abuelos():
 
 #for m in range(len(diagnosticos)):
 #    print(f"{diagnosticos[m][0]}: diagnóstico probable => {diagnosticos[m][1]}")
+
