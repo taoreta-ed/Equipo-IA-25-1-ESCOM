@@ -140,9 +140,9 @@ def tios():
 
 
 
-parejas,hijos_comunes = parejas()
+pareja_resultado,hijos_comunes = parejas()
 print(padres())
-print(parejas)
+print(pareja_resultado)
 print(hijos_comunes)
 print(hijos())
 print("\n")
