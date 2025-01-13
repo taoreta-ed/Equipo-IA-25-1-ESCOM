@@ -21,7 +21,7 @@ def padres():
     hijo = []
     relacionHijo = {}
         
-    #Determinar quién es hijo de quién en un diccionario
+    #Determinar quién es padre de quién en un diccionario
     for i in range(len(relaciones)):
         padre += [relaciones[i][0]]
         hijo += [relaciones[i][1]]
@@ -30,7 +30,21 @@ def padres():
         relacionHijo[padre[i]] += [hijo[i]]
     return relacionHijo
 
-#print(padres())
+def hijos():
+    padre = []
+    hijo = []
+    relacionPadre = {}
+        
+    #Determinar quién es hijo de quién en un diccionario
+    for i in range(len(relaciones)):
+        padre += [relaciones[i][0]]
+        hijo += [relaciones[i][1]]
+        if hijo[i] not in relacionPadre:
+            relacionPadre[hijo[i]] = []
+        relacionPadre[hijo[i]] += [padre[i]]
+    return relacionPadre
+
+print(padres())
 
 def parejas():
     padre = padres()
@@ -50,10 +64,30 @@ def parejas():
     
     return relacionPareja
 
-print(parejas())
+#print(parejas())
 
 def tios():
-    return
+    pareja = parejas()
+    relacionTios = {}
+    relacionPadreHijo = padres()
+    relacionHijoPadre = {}
+
+    for p, hijos in relacionPadreHijo.items():
+        for h in hijos:
+            if h not in relacionHijoPadre:
+                relacionHijoPadre[h] = []
+            relacionHijoPadre[h].append(p)
+
+    for padre in relacionPadreHijo:
+        if padre in relacionHijoPadre:
+            for abuelo in relacionHijoPadre[padre]:
+                for hermano in relacionPadreHijo.get(abuelo, []):
+                    if hermano != padre:
+                        for hijo in relacionPadreHijo[padre]:
+                            relacionTios.setdefault(hijo, []).append(hermano)
+    return relacionTios
+
+#print(tios())
 
 def abuelos():
     relacionHijo = padres()
